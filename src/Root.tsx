@@ -1,6 +1,7 @@
 // The list of videos ("compositions") in this project.
 // Every YouTube Short uses the same vertical format, defined once here.
-import { Composition } from "remotion";
+import { Composition, Still } from "remotion";
+import { ProfilePic } from "./brand/ProfilePic";
 import { HelloShort } from "./HelloShort";
 import { FunFact } from "./examples/FunFact";
 import { QuickTip } from "./examples/QuickTip";
@@ -47,6 +48,10 @@ export const RemotionRoot: React.FC = () => {
         fps={SHORT_FPS}
         durationInFrames={top5Duration(mountains)}
       />
+      {/* Channel profile pictures (800×800 still images) */}
+      {(["gold", "night", "sunset"] as const).map((v) => (
+        <Still key={v} id={`ProfilePic-${v}`} component={ProfilePic} defaultProps={{ variant: v }} width={800} height={800} />
+      ))}
     </>
   );
 };
