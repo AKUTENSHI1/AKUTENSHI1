@@ -2,6 +2,7 @@
 // Every YouTube Short uses the same vertical format, defined once here.
 import { Composition, Still } from "remotion";
 import { ProfilePic } from "./brand/ProfilePic";
+import { Banner } from "./brand/Banner";
 import { HelloShort } from "./HelloShort";
 import { FunFact } from "./examples/FunFact";
 import { QuickTip } from "./examples/QuickTip";
@@ -51,6 +52,10 @@ export const RemotionRoot: React.FC = () => {
       {/* Channel profile pictures (800×800 still images) */}
       {(["gold", "night", "sunset"] as const).map((v) => (
         <Still key={v} id={`ProfilePic-${v}`} component={ProfilePic} defaultProps={{ variant: v }} width={800} height={800} />
+      ))}
+      {/* Channel banners (2560×1440 still images) */}
+      {(["gold", "night", "sunset"] as const).map((v) => (
+        <Still key={v} id={`Banner-${v}`} component={Banner} defaultProps={{ variant: v }} width={2560} height={1440} />
       ))}
     </>
   );
