@@ -1,4 +1,4 @@
-// A 10-second test Short with animated Arabic text.
+// A 10-second test Short with animated text.
 // Change the words in TEXT below to make your own version.
 import React from "react";
 import {
@@ -10,21 +10,19 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { ARABIC_FONT } from "./fonts";
+import { MAIN_FONT } from "./fonts";
 
 const TEXT = {
-  title: "مرحباً بالعالم",
-  // Mixed Arabic + English on one line, to prove right-to-left works.
-  subtitle: "هذا أول فيديو لي مع Remotion",
-  line1: "فيديو قصير",
-  line2: "بالعربية",
-  cta: "اشترك الآن",
+  title: "Hello World",
+  subtitle: "My first video made with Remotion",
+  line1: "Short.",
+  line2: "Animated.",
+  cta: "Subscribe",
 };
 
-// Shared style: right-to-left direction + Arabic font.
-const rtlText: React.CSSProperties = {
-  fontFamily: ARABIC_FONT,
-  direction: "rtl",
+// Shared text style.
+const textStyle: React.CSSProperties = {
+  fontFamily: MAIN_FONT,
   textAlign: "center",
   color: "white",
   lineHeight: 1.4,
@@ -43,9 +41,7 @@ const Background: React.FC = () => {
   );
 };
 
-// Words pop in one after another (from right to left, the Arabic reading order).
-// Note: split Arabic by WORDS, never by single letters — splitting letters
-// breaks the way Arabic letters join together.
+// Words pop in one after another.
 const WordByWord: React.FC<{ text: string; fontSize: number }> = ({
   text,
   fontSize,
@@ -55,10 +51,8 @@ const WordByWord: React.FC<{ text: string; fontSize: number }> = ({
   const words = text.split(" ");
   return (
     <div
-      lang="ar"
-      dir="rtl"
       style={{
-        ...rtlText,
+        ...textStyle,
         fontSize,
         fontWeight: 900,
         display: "flex",
@@ -104,10 +98,8 @@ const SceneTitle: React.FC = () => {
     >
       <WordByWord text={TEXT.title} fontSize={150} />
       <div
-        lang="ar"
-        dir="rtl"
         style={{
-          ...rtlText,
+          ...textStyle,
           fontSize: 60,
           fontWeight: 700,
           marginTop: 40,
@@ -122,7 +114,7 @@ const SceneTitle: React.FC = () => {
   );
 };
 
-// Scene 2 (3.5–7 s): two lines sliding in from the right.
+// Scene 2 (3.5–7 s): two lines sliding in from the left.
 const SceneLines: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -140,14 +132,12 @@ const SceneLines: React.FC = () => {
         return (
           <div
             key={i}
-            lang="ar"
-            dir="rtl"
             style={{
-              ...rtlText,
+              ...textStyle,
               fontSize: 170,
               fontWeight: 900,
               opacity: slide,
-              transform: `translateX(${(1 - slide) * 700}px)`,
+              transform: `translateX(${(1 - slide) * -700}px)`,
               textShadow: "0 10px 40px rgba(0,0,0,0.35)",
             }}
           >
@@ -159,7 +149,7 @@ const SceneLines: React.FC = () => {
   );
 };
 
-// Scene 3 (7–10 s): pulsing "subscribe" button + a progress bar filling right-to-left.
+// Scene 3 (7–10 s): pulsing "subscribe" button + a progress bar filling up.
 const SceneCta: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -172,10 +162,8 @@ const SceneCta: React.FC = () => {
   return (
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
       <div
-        lang="ar"
-        dir="rtl"
         style={{
-          ...rtlText,
+          ...textStyle,
           fontSize: 110,
           fontWeight: 900,
           background: "#ef4444",
@@ -188,7 +176,6 @@ const SceneCta: React.FC = () => {
         {TEXT.cta}
       </div>
       <div
-        dir="rtl"
         style={{
           marginTop: 120,
           width: 700,
@@ -199,7 +186,6 @@ const SceneCta: React.FC = () => {
           opacity: enter,
         }}
       >
-        {/* In an RTL box, the bar naturally grows from the right side. */}
         <div style={{ width: `${progress}%`, height: "100%", background: "white" }} />
       </div>
     </AbsoluteFill>
