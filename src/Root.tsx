@@ -7,6 +7,8 @@ import { QuickTip } from "./examples/QuickTip";
 import { Story } from "./examples/Story";
 import { Quote } from "./examples/Quote";
 import { Top5 } from "./examples/Top5";
+import { Top5Video, top5Duration } from "./top5/Top5Video";
+import { mountains } from "./top5/data";
 
 export const SHORT_WIDTH = 1080;
 export const SHORT_HEIGHT = 1920;
@@ -35,6 +37,16 @@ export const RemotionRoot: React.FC = () => {
           durationInFrames={s.seconds * SHORT_FPS}
         />
       ))}
+      {/* Top 5 template with pictures, panning and music */}
+      <Composition
+        id="Top5Mountains"
+        component={Top5Video}
+        defaultProps={{ data: mountains }}
+        width={SHORT_WIDTH}
+        height={SHORT_HEIGHT}
+        fps={SHORT_FPS}
+        durationInFrames={top5Duration(mountains)}
+      />
     </>
   );
 };
