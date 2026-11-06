@@ -11,6 +11,7 @@ import { Quote } from "./examples/Quote";
 import { Top5 } from "./examples/Top5";
 import { Top5Video, top5Duration } from "./top5/Top5Video";
 import { mountains } from "./top5/data";
+import { week1 } from "./top5/week1";
 
 export const SHORT_WIDTH = 1080;
 export const SHORT_HEIGHT = 1920;
@@ -49,6 +50,19 @@ export const RemotionRoot: React.FC = () => {
         fps={SHORT_FPS}
         durationInFrames={top5Duration(mountains)}
       />
+      {/* Week 1: seven daily Top 5 videos */}
+      {week1.map((v) => (
+        <Composition
+          key={v.id}
+          id={v.id}
+          component={Top5Video}
+          defaultProps={{ data: v.data }}
+          width={SHORT_WIDTH}
+          height={SHORT_HEIGHT}
+          fps={SHORT_FPS}
+          durationInFrames={top5Duration(v.data)}
+        />
+      ))}
       {/* Channel profile pictures (800×800 still images) */}
       {(["gold", "night", "sunset"] as const).map((v) => (
         <Still key={v} id={`ProfilePic-${v}`} component={ProfilePic} defaultProps={{ variant: v }} width={800} height={800} />

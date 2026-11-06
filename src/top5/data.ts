@@ -6,6 +6,7 @@ export type Top5Item = {
   detail: string; // small line under it, e.g. "8,849 m"
   image: string; // file inside public/ (e.g. "images/everest.jpg")
   aspect: number; // picture width ÷ height (e.g. 1.5 for a 3:2 photo)
+  emoji?: string; // optional big emoji/flag shown above the rank (e.g. "🇨🇦")
 };
 
 export type Top5Data = {
@@ -19,6 +20,7 @@ export type Top5Data = {
   outro: string;
   music?: string; // file inside public/ — leave empty for no music
   musicVolume?: number; // 0 to 1
+  pan?: number; // how far pictures slide: 1 = edge to edge, 0.4 = gently around the middle
 };
 
 // The pictures below are drawn stand-ins. To use real photos, save them in

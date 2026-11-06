@@ -31,7 +31,8 @@ const PanImage: React.FC<{
   direction: 1 | -1;
   zoomFrom?: number;
   zoomTo?: number;
-}> = ({ src, aspect, duration, direction, zoomFrom = 1.08, zoomTo = 1.18 }) => {
+  pan?: number;
+}> = ({ src, aspect, duration, direction, zoomFrom = 1.08, zoomTo = 1.18, pan = 1 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const zoom = interpolate(frame, [0, duration], [zoomFrom, zoomTo]);
@@ -42,7 +43,8 @@ const PanImage: React.FC<{
     extrapolateRight: "clamp",
     easing: Easing.inOut(Easing.sin),
   });
-  const x = direction === 1 ? -travel * t : -travel * (1 - t);
+  // Centered slide; pan = 1 goes edge to edge, smaller values stay near the middle.
+  const x = -travel / 2 + direction * (0.5 - t) * travel * pan;
   return (
     <AbsoluteFill style={{ overflow: "hidden", backgroundColor: "black" }}>
       <Img
@@ -79,13 +81,14 @@ const Flash: React.FC = () => {
 const Hook: React.FC<{ d: Top5Data }> = ({ d }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const top = spring({ frame, fps, config: { damping: 10 } });
-  const title = spring({ frame: frame - 6, fps, config: { damping: 11 } });
-  const tease = spring({ frame: frame - 30, fps, config: { damping: 9 } });
+  // Start part-way into the animation so the very first frame already shows the title.
+  const top = spring({ frame: frame + 8, fps, config: { damping: 10 } });
+  const title = spring({ frame: frame + 6, fps, config: { damping: 11 } });
+  const tease = spring({ frame: frame - 24, fps, config: { damping: 9 } });
   const shake = frame < 12 ? Math.sin(frame * 3) * (12 - frame) * 1.5 : 0;
   return (
     <AbsoluteFill>
-      <PanImage src={d.hookImage} aspect={d.hookAspect} duration={HOOK + SWIPE} direction={1} zoomFrom={1.6} zoomTo={1.15} />
+      <PanImage src={d.hookImage} aspect={d.hookAspect} duration={HOOK + SWIPE} direction={1} zoomFrom={1.6} zoomTo={1.15} pan={d.pan} />
       <AbsoluteFill style={{ background: "rgba(0,0,0,0.35)" }} />
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", transform: `translateX(${shake}px)` }}>
         <div
@@ -129,7 +132,6 @@ const Hook: React.FC<{ d: Top5Data }> = ({ d }) => {
           {d.hookTease}
         </div>
       </AbsoluteFill>
-      <Flash />
     </AbsoluteFill>
   );
 };
@@ -156,8 +158,23 @@ const Item: React.FC<{ d: Top5Data; index: number }> = ({ d, index }) => {
         aspect={item.aspect}
         duration={PER_ITEM + SWIPE}
         direction={index % 2 === 0 ? 1 : -1}
+        pan={d.pan}
       />
       <Shade />
+      {item.emoji ? (
+        <AbsoluteFill style={{ justifyContent: "flex-start", alignItems: "center", paddingTop: 470 }}>
+          <div
+            style={{
+              fontSize: 340,
+              lineHeight: 1,
+              transform: `scale(${spring({ frame: frame - 4, fps, config: { damping: 10 } })}) rotate(${Math.sin(frame / 12) * 3}deg)`,
+              filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.5))",
+            }}
+          >
+            {item.emoji}
+          </div>
+        </AbsoluteFill>
+      ) : null}
       <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 380 }}>
         <div
           style={{
@@ -239,7 +256,7 @@ const Outro: React.FC<{ d: Top5Data }> = ({ d }) => {
   const last = d.items[d.items.length - 1];
   return (
     <AbsoluteFill>
-      <PanImage src={last.image} aspect={last.aspect} duration={OUTRO} direction={-1} zoomFrom={1.2} zoomTo={1.3} />
+      <PanImage src={last.image} aspect={last.aspect} duration={OUTRO} direction={-1} zoomFrom={1.2} zoomTo={1.3} pan={d.pan} />
       <AbsoluteFill style={{ background: "rgba(0,0,0,0.55)" }} />
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
         <div
