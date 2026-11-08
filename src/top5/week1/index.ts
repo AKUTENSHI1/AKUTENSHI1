@@ -53,7 +53,8 @@ export const week1: { id: string; data: Top5Data }[] = [
       ...base,
       hookTitle: "Biggest Countries in the World",
       hookTease: "#1 is HUGE 😳",
-      hookImage: "images/planets/earth.jpg",
+      hookImage: "images/countries/hook.jpg",
+      hookAspect: 0.5625,
       pan: 0.15,
       // Real photos, shown as cards (some are small and would blur at full screen)
       items: [
