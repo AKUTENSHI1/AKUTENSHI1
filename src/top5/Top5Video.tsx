@@ -158,7 +158,7 @@ const Item: React.FC<{ d: Top5Data; index: number }> = ({ d, index }) => {
         aspect={item.aspect}
         duration={PER_ITEM + SWIPE}
         direction={index % 2 === 0 ? 1 : -1}
-        pan={d.pan}
+        pan={item.pan ?? d.pan}
       />
       <Shade />
       {item.emoji ? (

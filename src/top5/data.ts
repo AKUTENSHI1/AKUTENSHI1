@@ -7,6 +7,7 @@ export type Top5Item = {
   image: string; // file inside public/ (e.g. "images/everest.jpg")
   aspect: number; // picture width ÷ height (e.g. 1.5 for a 3:2 photo)
   emoji?: string; // optional big emoji/flag shown above the rank (e.g. "🇨🇦")
+  pan?: number; // optional: override the video's pan amount for this picture only
 };
 
 export type Top5Data = {
