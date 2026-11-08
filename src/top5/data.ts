@@ -8,6 +8,7 @@ export type Top5Item = {
   aspect: number; // picture width ÷ height (e.g. 1.5 for a 3:2 photo)
   emoji?: string; // optional big emoji/flag shown above the rank (e.g. "🇨🇦")
   pan?: number; // optional: override the video's pan amount for this picture only
+  fit?: "cover" | "card"; // "card": sharp photo in the middle over a blurred copy (for small photos)
 };
 
 export type Top5Data = {

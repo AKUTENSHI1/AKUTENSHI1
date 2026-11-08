@@ -63,6 +63,54 @@ const PanImage: React.FC<{
   );
 };
 
+// A photo shown as a sharp card in the middle, over a blurred copy that fills the screen.
+// Used for smaller photos that would look blurry if stretched to full screen.
+export const CARD_CENTER_Y = 760;
+const CARD_MAX_W = 1000;
+const CARD_MAX_H = 700;
+export const cardSize = (aspect: number) => {
+  const w = Math.min(CARD_MAX_W, CARD_MAX_H * aspect);
+  return { w, h: w / aspect };
+};
+
+const CardImage: React.FC<{ src: string; aspect: number; duration: number }> = ({ src, aspect, duration }) => {
+  const frame = useCurrentFrame();
+  const { width } = useVideoConfig();
+  const { w, h } = cardSize(aspect);
+  const zoom = interpolate(frame, [0, duration], [1, 1.07]);
+  const bgZoom = interpolate(frame, [0, duration], [1.25, 1.4]);
+  return (
+    <AbsoluteFill style={{ backgroundColor: "black", overflow: "hidden" }}>
+      <Img
+        src={staticFile(src)}
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          filter: "blur(40px) brightness(0.55)",
+          transform: `scale(${bgZoom})`,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: (width - w) / 2,
+          top: CARD_CENTER_Y - h / 2,
+          width: w,
+          height: h,
+          borderRadius: 36,
+          overflow: "hidden",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.6)",
+          border: "4px solid rgba(255,255,255,0.85)",
+        }}
+      >
+        <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${zoom})` }} />
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 // Dark fade at top and bottom so white text is always readable.
 const Shade: React.FC = () => (
   <AbsoluteFill
@@ -142,6 +190,7 @@ const Item: React.FC<{ d: Top5Data; index: number }> = ({ d, index }) => {
   const item = d.items[index];
   const rank = d.items.length - index;
   const isFirst = rank === 1;
+  const isCard = item.fit === "card";
   // Swipe in from the right (panoramic whip-pan).
   const enter = interpolate(frame, [0, SWIPE], [width, 0], {
     extrapolateRight: "clamp",
@@ -153,19 +202,30 @@ const Item: React.FC<{ d: Top5Data; index: number }> = ({ d, index }) => {
   const gold = isFirst ? "#facc15" : "white";
   return (
     <AbsoluteFill style={{ transform: `translateX(${enter}px)` }}>
-      <PanImage
-        src={item.image}
-        aspect={item.aspect}
-        duration={PER_ITEM + SWIPE}
-        direction={index % 2 === 0 ? 1 : -1}
-        pan={item.pan ?? d.pan}
-      />
+      {isCard ? (
+        <CardImage src={item.image} aspect={item.aspect} duration={PER_ITEM + SWIPE} />
+      ) : (
+        <PanImage
+          src={item.image}
+          aspect={item.aspect}
+          duration={PER_ITEM + SWIPE}
+          direction={index % 2 === 0 ? 1 : -1}
+          pan={item.pan ?? d.pan}
+        />
+      )}
       <Shade />
       {item.emoji ? (
-        <AbsoluteFill style={{ justifyContent: "flex-start", alignItems: "center", paddingTop: 470 }}>
+        <AbsoluteFill
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "center",
+            // on a card, the flag sits on the card's top edge
+            paddingTop: isCard ? CARD_CENTER_Y - cardSize(item.aspect).h / 2 - 120 : 470,
+          }}
+        >
           <div
             style={{
-              fontSize: 340,
+              fontSize: isCard ? 200 : 340,
               lineHeight: 1,
               transform: `scale(${spring({ frame: frame - 4, fps, config: { damping: 10 } })}) rotate(${Math.sin(frame / 12) * 3}deg)`,
               filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.5))",
