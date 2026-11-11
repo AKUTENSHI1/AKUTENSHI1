@@ -108,7 +108,7 @@ export const week1: { id: string; data: Top5Data }[] = [
       ...base,
       hookTitle: "Biggest Moons in the Solar System",
       hookTease: "Two are bigger than Mercury!",
-      hookImage: "images/moons/hook.svg",
+      hookImage: "images/planets/jupiter.jpg", // real Jupiter photo: 3 of these moons orbit it
       pan: 0.15,
       items: [
         { name: "Our Moon", detail: "3,475 km · Earth", ...img("moons/moon.svg") },
