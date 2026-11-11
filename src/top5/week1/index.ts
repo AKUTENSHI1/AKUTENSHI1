@@ -111,11 +111,11 @@ export const week1: { id: string; data: Top5Data }[] = [
       hookImage: "images/planets/jupiter.jpg", // real Jupiter photo: 3 of these moons orbit it
       pan: 0.15,
       items: [
-        { name: "Our Moon", detail: "3,475 km · Earth", ...img("moons/moon.svg") },
-        { name: "Io", detail: "3,643 km · Jupiter", ...img("moons/io.svg") },
-        { name: "Callisto", detail: "4,821 km · Jupiter", ...img("moons/callisto.svg") },
-        { name: "Titan", detail: "5,150 km · Saturn", ...img("moons/titan.svg") },
-        { name: "Ganymede", detail: "5,268 km · Jupiter", ...img("moons/ganymede.svg") },
+        { name: "Our Moon", detail: "3,475 km · Earth", image: "images/moons/moon.jpg", aspect: 1.5 },
+        { name: "Io", detail: "3,643 km · Jupiter", image: "images/moons/io.jpg", aspect: 1.5 },
+        { name: "Callisto", detail: "4,821 km · Jupiter", image: "images/moons/callisto.jpg", aspect: 1.5 },
+        { name: "Titan", detail: "5,150 km · Saturn", image: "images/moons/titan.jpg", aspect: 1.5 },
+        { name: "Ganymede", detail: "5,268 km · Jupiter", image: "images/moons/ganymede.jpg", aspect: 1.5 },
       ],
     },
   },
