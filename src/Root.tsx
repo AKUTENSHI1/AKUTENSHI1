@@ -3,6 +3,7 @@
 import { Composition, Still } from "remotion";
 import { ProfilePic } from "./brand/ProfilePic";
 import { Banner } from "./brand/Banner";
+import { Thumbnail } from "./brand/Thumbnail";
 import { HelloShort } from "./HelloShort";
 import { FunFact } from "./examples/FunFact";
 import { QuickTip } from "./examples/QuickTip";
@@ -79,6 +80,24 @@ export const RemotionRoot: React.FC = () => {
       {(["gold", "night", "sunset"] as const).map((v) => (
         <Still key={v} id={`ProfilePic-${v}`} component={ProfilePic} defaultProps={{ variant: v }} width={800} height={800} />
       ))}
+      {/* Thumbnails (1080x1920 stills) */}
+      <Still
+        id="Thumb-Bugs"
+        component={Thumbnail}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          image: "images/bugs/mosquito.jpg",
+          top: "TOP 5",
+          title: "DEADLIEST BUGS",
+          punch: "#1 IS TINY 😨",
+          accent: "#ef4444",
+          zoom: 1.0,
+          focusX: 45,
+          focusY: 40,
+          textTop: 900,
+        }}
+      />
       {/* Channel banners (2560×1440 still images) */}
       {(["gold", "night", "sunset"] as const).map((v) => (
         <Still key={v} id={`Banner-${v}`} component={Banner} defaultProps={{ variant: v }} width={2560} height={1440} />
