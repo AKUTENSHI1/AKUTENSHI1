@@ -12,6 +12,8 @@ import { Top5 } from "./examples/Top5";
 import { Top5Video, top5Duration } from "./top5/Top5Video";
 import { mountains } from "./top5/data";
 import { week1 } from "./top5/week1";
+import { Top5V2, v2Duration } from "./top5/v2/Top5V2";
+import { deadliestBugs } from "./top5/week2/bugs";
 
 export const SHORT_WIDTH = 1080;
 export const SHORT_HEIGHT = 1920;
@@ -63,6 +65,16 @@ export const RemotionRoot: React.FC = () => {
           durationInFrames={top5Duration(v.data)}
         />
       ))}
+      {/* Style 2.0 videos */}
+      <Composition
+        id="Bugs-Deadliest"
+        component={Top5V2}
+        defaultProps={{ data: deadliestBugs }}
+        width={SHORT_WIDTH}
+        height={SHORT_HEIGHT}
+        fps={SHORT_FPS}
+        durationInFrames={v2Duration(deadliestBugs)}
+      />
       {/* Channel profile pictures (800×800 still images) */}
       {(["gold", "night", "sunset"] as const).map((v) => (
         <Still key={v} id={`ProfilePic-${v}`} component={ProfilePic} defaultProps={{ variant: v }} width={800} height={800} />
