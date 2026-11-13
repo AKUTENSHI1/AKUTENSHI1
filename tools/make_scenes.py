@@ -272,3 +272,22 @@ island(f"{P}/islands/greenland.svg", "#cbd5e1", "#e2e8f0", 105, size=1.0, ice=Tr
 for i, tint in enumerate(["#1e3a8a", "#7f1d1d", "#14532d", "#4c1d95", "#9a3412", "#0e7490"]):
     globe(f"{P}/globe/globe{i}.svg", tint, 110 + i)
 print("ok")
+
+# ---------------- WEEK 2 ----------------
+def sun(path):
+    defs = rad("core", [(0, "#fffbeb", 1), (0.35, "#fde047", 1), (0.75, "#f97316", 1), (1, "#b91c1c", 1)])
+    defs += rad("corona", [(0, "#f97316", 0.7), (0.5, "#f59e0b", 0.25), (1, "#7c2d12", 0)])
+    body = f'<rect width="{W}" height="{H}" fill="#0c0a09"/>{stars(500, 200)}'
+    body += f'<circle cx="1200" cy="600" r="900" fill="url(#corona)"/>'
+    body += f'<circle cx="1200" cy="600" r="420" fill="url(#core)"/>'
+    rnd = random.Random(501)
+    for _ in range(40):  # sunspots / granules
+        a = rnd.random() * 6.28; d = rnd.uniform(0, 330)
+        body += f'<circle cx="{1200 + d * math.cos(a):.0f}" cy="{600 + d * math.sin(a):.0f}" r="{rnd.uniform(6, 22):.0f}" fill="#ea580c" opacity="0.35"/>'
+    save(path, body, defs)
+
+planet(f"{P}/planets/venus.svg", ["#fde68a", "#fef3c7", "#fcd34d", "#fef9c3", "#fbbf24"], r=520, seed=75, glow="#fbbf24")
+planet(f"{P}/planets/mars.svg", ["#b91c1c", "#c2410c", "#9a3412", "#dc2626", "#7c2d12"], r=480, seed=76, glow="#ef4444")
+moon(f"{P}/planets/mercury.svg", "#a8a29e", "#57534e", 77)
+sun(f"{P}/planets/sun.svg")
+print("week2 ok")
