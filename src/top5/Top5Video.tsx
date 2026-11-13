@@ -24,7 +24,7 @@ const SWIPE = 10; // frames of overlap for the swipe transition
 export const top5Duration = (d: Top5Data) => HOOK + d.items.length * PER_ITEM + OUTRO;
 
 // A photo that fills the screen and slowly pans sideways (panoramic look).
-const PanImage: React.FC<{
+export const PanImage: React.FC<{
   src: string;
   aspect: number;
   duration: number;
@@ -73,7 +73,7 @@ export const cardSize = (aspect: number) => {
   return { w, h: w / aspect };
 };
 
-const CardImage: React.FC<{ src: string; aspect: number; duration: number }> = ({ src, aspect, duration }) => {
+export const CardImage: React.FC<{ src: string; aspect: number; duration: number }> = ({ src, aspect, duration }) => {
   const frame = useCurrentFrame();
   const { width } = useVideoConfig();
   const { w, h } = cardSize(aspect);
@@ -112,7 +112,7 @@ const CardImage: React.FC<{ src: string; aspect: number; duration: number }> = (
 };
 
 // Dark fade at top and bottom so white text is always readable.
-const Shade: React.FC = () => (
+export const Shade: React.FC = () => (
   <AbsoluteFill
     style={{
       background:
