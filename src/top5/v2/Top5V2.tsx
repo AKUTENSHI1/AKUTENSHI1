@@ -21,13 +21,31 @@ import type { Top5Data } from "../data";
 
 // Timing (frames at 30 fps). tools/make_music_v2.py uses the same numbers.
 export const V2 = { HOOK: 45, ITEM: 75, GUESS: 30, FINAL: 90, TAIL: 15, SWIPE: 8 };
-export const v2Duration = (d: Top5Data) =>
-  V2.HOOK + (d.items.length - 1) * V2.ITEM + V2.GUESS + V2.FINAL + V2.TAIL;
+// Section lengths in frames. Defaults to the fixed Style 2.0 timing, or follows
+// a voiceover when the video has a `timing` (see tools/voiceover.mjs).
+export type V2Timing = { hook: number; items: number[]; guess: number; final: number; tail: number };
+export const v2Timing = (d: Top5Data & V2Extras): V2Timing =>
+  d.timing ?? {
+    hook: V2.HOOK,
+    items: d.items.slice(0, -1).map(() => V2.ITEM),
+    guess: V2.GUESS,
+    final: V2.FINAL,
+    tail: V2.TAIL,
+  };
+export const v2Duration = (d: Top5Data & V2Extras) => {
+  const t = v2Timing(d);
+  return t.hook + t.items.reduce((a, b) => a + b, 0) + t.guess + t.final + t.tail;
+};
 
 export type V2Extras = {
   accent?: string; // highlight color (default gold)
   guessText?: string; // shown during the pause before #1
   commentText?: string; // shown at the end of #1
+  seriesBadge?: string; // e.g. "🌍 COUNTRY SERIES · EP 1"
+  nextText?: string; // e.g. "Next: 🇮🇹 Italy" — shown at the end
+  voice?: string; // voiceover file inside public/
+  voiceStartsNextAt?: number; // frame (from the #1 reveal) when the "next episode" line is spoken
+  timing?: V2Timing;
 };
 
 const Photo: React.FC<{ d: Top5Data; i: number; duration: number }> = ({ d, i, duration }) => {
@@ -68,6 +86,11 @@ const Hook: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
       </AbsoluteFill>
       <AbsoluteFill style={{ background: "rgba(0,0,0,0.45)" }} />
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: "0 50px" }}>
+        {d.seriesBadge ? (
+          <div style={{ ...textStyle, fontSize: 44, fontWeight: 800, color: "white", background: "rgba(0,0,0,0.55)", border: "2px solid rgba(255,255,255,0.7)", borderRadius: 999, padding: "2px 28px 10px", marginBottom: 28 }}>
+            {d.seriesBadge}
+          </div>
+        ) : null}
         <div
           style={{
             ...textStyle,
@@ -122,7 +145,7 @@ const Dots: React.FC<{ d: Top5Data & V2Extras; active: number; unknownFirst?: bo
   );
 };
 
-const Item: React.FC<{ d: Top5Data & V2Extras; i: number }> = ({ d, i }) => {
+const Item: React.FC<{ d: Top5Data & V2Extras; i: number; len: number }> = ({ d, i, len }) => {
   const frame = useCurrentFrame();
   const { fps, width } = useVideoConfig();
   const it = d.items[i];
@@ -133,7 +156,7 @@ const Item: React.FC<{ d: Top5Data & V2Extras; i: number }> = ({ d, i }) => {
   const detail = spring({ frame: frame - 13, fps, config: { damping: 11 } });
   return (
     <AbsoluteFill style={{ transform: `translateX(${enter}px)` }}>
-      <Photo d={d} i={i} duration={V2.ITEM + V2.SWIPE} />
+      <Photo d={d} i={i} duration={len + V2.SWIPE} />
       <Shade />
       <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 330 }}>
         <div style={{ ...big(260), transform: `scale(${num})` }}>#{rank}</div>
@@ -163,14 +186,14 @@ const Item: React.FC<{ d: Top5Data & V2Extras; i: number }> = ({ d, i }) => {
 };
 
 // ---------- 3. "Guess #1?" pause ----------
-const Guess: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
+const Guess: React.FC<{ d: Top5Data & V2Extras; len: number }> = ({ d, len }) => {
   const frame = useCurrentFrame();
   const last = d.items.length - 1;
   const shake = Math.sin(frame * 2.2) * 6;
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ filter: "blur(38px) brightness(0.5)", transform: "scale(1.2)" }}>
-        <Photo d={d} i={last} duration={V2.GUESS} />
+        <Photo d={d} i={last} duration={len} />
       </AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", transform: `translateX(${shake}px)` }}>
         <div style={{ fontSize: 260, lineHeight: 1 }}>🤔</div>
@@ -183,7 +206,7 @@ const Guess: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
 };
 
 // ---------- 4. #1 reveal ----------
-const Final: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
+const Final: React.FC<{ d: Top5Data & V2Extras; len: number }> = ({ d, len }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const last = d.items.length - 1;
@@ -196,7 +219,7 @@ const Final: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
   const shake = frame < 10 ? Math.sin(frame * 3) * (10 - frame) * 2 : 0;
   return (
     <AbsoluteFill style={{ transform: `translate(${shake}px, ${-shake / 2}px)` }}>
-      <Photo d={d} i={last} duration={V2.FINAL + V2.TAIL} />
+      <Photo d={d} i={last} duration={len} />
       <Shade />
       <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 330 }}>
         <div style={{ ...big(300, accent), transform: `scale(${num}) rotate(${(1 - num) * -10}deg)` }}>#1</div>
@@ -236,6 +259,24 @@ const Final: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
           {d.commentText ?? "Did you guess right? 👇"}
         </div>
       </div>
+      {d.nextText ? (
+        <div style={{ position: "absolute", top: 440, width: "100%", display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              ...textStyle,
+              fontSize: 60,
+              fontWeight: 900,
+              color: "#111",
+              background: "white",
+              borderRadius: 24,
+              padding: "4px 40px 14px",
+              transform: `scale(${spring({ frame: frame - (d.voiceStartsNextAt ?? 50), fps, config: { damping: 10 } })})`,
+            }}
+          >
+            {d.nextText}
+          </div>
+        </div>
+      ) : null}
       {/* small follow badge */}
       <div
         style={{
@@ -261,31 +302,33 @@ const Final: React.FC<{ d: Top5Data & V2Extras }> = ({ d }) => {
 
 export const Top5V2: React.FC<{ data: Top5Data & V2Extras }> = ({ data: d }) => {
   const n = d.items.length;
-  const itemsStart = V2.HOOK;
-  const guessStart = itemsStart + (n - 1) * V2.ITEM;
-  const finalStart = guessStart + V2.GUESS;
-  const tailStart = finalStart + V2.FINAL;
+  const t = v2Timing(d);
+  const itemStarts = t.items.map((_, i) => t.hook + t.items.slice(0, i).reduce((a, b) => a + b, 0));
+  const guessStart = t.hook + t.items.reduce((a, b) => a + b, 0);
+  const finalStart = guessStart + t.guess;
+  const tailStart = finalStart + t.final;
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
-      {d.music ? <Audio src={staticFile(d.music)} volume={d.musicVolume ?? 0.8} /> : null}
-      <Sequence durationInFrames={V2.HOOK + V2.SWIPE}>
+      {d.music ? <Audio src={staticFile(d.music)} volume={d.musicVolume ?? 0.8} loop /> : null}
+      {d.voice ? <Audio src={staticFile(d.voice)} volume={1} /> : null}
+      <Sequence durationInFrames={t.hook + V2.SWIPE}>
         <Hook d={d} />
       </Sequence>
       {d.items.slice(0, n - 1).map((_, i) => (
-        <Sequence key={i} from={itemsStart + i * V2.ITEM} durationInFrames={V2.ITEM + V2.SWIPE}>
-          <Item d={d} i={i} />
+        <Sequence key={i} from={itemStarts[i]} durationInFrames={t.items[i] + V2.SWIPE}>
+          <Item d={d} i={i} len={t.items[i]} />
         </Sequence>
       ))}
-      <Sequence from={guessStart} durationInFrames={V2.GUESS}>
-        <Guess d={d} />
+      <Sequence from={guessStart} durationInFrames={t.guess}>
+        <Guess d={d} len={t.guess} />
       </Sequence>
       <Sequence from={finalStart}>
-        <Final d={d} />
+        <Final d={d} len={t.final + t.tail} />
       </Sequence>
       {/* Loop: the last frames fade into the very first frame, so a replay feels seamless */}
       <Sequence from={tailStart}>
-        <AbsoluteFill style={{ opacity: interpolate(frame, [tailStart, tailStart + V2.TAIL - 1], [0, 1], { extrapolateRight: "clamp" }) }}>
+        <AbsoluteFill style={{ opacity: interpolate(frame, [tailStart, tailStart + t.tail - 1], [0, 1], { extrapolateRight: "clamp" }) }}>
           <Freeze frame={0}>
             <Hook d={d} />
           </Freeze>

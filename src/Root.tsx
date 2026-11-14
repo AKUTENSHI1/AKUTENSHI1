@@ -16,6 +16,7 @@ import { week1 } from "./top5/week1";
 import { Top5V2, v2Duration } from "./top5/v2/Top5V2";
 import { deadliestBugs } from "./top5/week2/bugs";
 import { hottestPlanets } from "./top5/week2/hotPlanets";
+import { japan } from "./series/japan";
 
 export const SHORT_WIDTH = 1080;
 export const SHORT_HEIGHT = 1920;
@@ -89,6 +90,16 @@ export const RemotionRoot: React.FC = () => {
         height={SHORT_HEIGHT}
         fps={SHORT_FPS}
         durationInFrames={v2Duration(hottestPlanets)}
+      />
+      {/* Country Series (timing follows the voiceover) */}
+      <Composition
+        id="Series-Japan"
+        component={Top5V2}
+        defaultProps={{ data: japan }}
+        width={SHORT_WIDTH}
+        height={SHORT_HEIGHT}
+        fps={SHORT_FPS}
+        durationInFrames={v2Duration(japan)}
       />
       {/* Thumbnails (1080x1920 stills) */}
       <Still
