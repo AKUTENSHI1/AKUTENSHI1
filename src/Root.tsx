@@ -15,6 +15,7 @@ import { mountains } from "./top5/data";
 import { week1 } from "./top5/week1";
 import { Top5V2, v2Duration } from "./top5/v2/Top5V2";
 import { deadliestBugs } from "./top5/week2/bugs";
+import { hottestPlanets } from "./top5/week2/hotPlanets";
 
 export const SHORT_WIDTH = 1080;
 export const SHORT_HEIGHT = 1920;
@@ -80,7 +81,33 @@ export const RemotionRoot: React.FC = () => {
       {(["gold", "night", "sunset"] as const).map((v) => (
         <Still key={v} id={`ProfilePic-${v}`} component={ProfilePic} defaultProps={{ variant: v }} width={800} height={800} />
       ))}
+      <Composition
+        id="Planets-Hottest"
+        component={Top5V2}
+        defaultProps={{ data: hottestPlanets }}
+        width={SHORT_WIDTH}
+        height={SHORT_HEIGHT}
+        fps={SHORT_FPS}
+        durationInFrames={v2Duration(hottestPlanets)}
+      />
       {/* Thumbnails (1080x1920 stills) */}
+      <Still
+        id="Thumb-HotPlanets"
+        component={Thumbnail}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          image: "images/planets/venus.jpg",
+          top: "TOP 5",
+          title: "HOTTEST PLANETS",
+          punch: "NOT MERCURY?! 🔥",
+          accent: "#f97316",
+          zoom: 1.0,
+          focusX: 50,
+          focusY: 50,
+          textTop: 860,
+        }}
+      />
       <Still
         id="Thumb-Bugs"
         component={Thumbnail}
