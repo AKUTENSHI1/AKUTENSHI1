@@ -37,8 +37,7 @@ export const japan: EditorialData = {
   voiceStartsNextAt: f(timing.lineStarts[7] - timing.lineStarts[6]),
   outro: "",
   voice: "voice/japan.mp3",
-  music: "music/intro-track.mp3",
-  musicVolume: 0.06,
+  // no background music: voice only
   pan: 0.6,
   timing: timingFromVoice(timing),
   items: [
