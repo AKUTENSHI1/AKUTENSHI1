@@ -12,6 +12,7 @@ white sneakers. Per episode: casual travel outfit that matches the country.
 | Face + full front + full back sheet (first) | 853311e4-e90e-42cd-9743-944ea90367b4 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_154855_853311e4-e90e-42cd-9743-944ea90367b4.png |
 | Glamorous / curvier version  | ab0fd606-1427-4a65-8b11-b85e8451f8b9 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_155259_ab0fd606-1427-4a65-8b11-b85e8451f8b9.png |
 | Fuller-figure polished version (latest, pending approval) | a7c7b6f6-def5-4047-b0f4-394857c35b32 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_155445_a7c7b6f6-def5-4047-b0f4-394857c35b32.png |
+| Japan intro frame (studio + Fuji screen, ivory shirt, red scarf) | a4564fa6-ae6b-4737-aa66-3ed2ef964f14 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_160039_a4564fa6-ae6b-4737-aa66-3ed2ef964f14.png |
 
 ## Costs (Higgsfield credits)
 - Character sheet / per-episode host picture: 0.25 (GPT Image 2.6, standard quality)
