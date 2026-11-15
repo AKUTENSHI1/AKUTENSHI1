@@ -3,7 +3,7 @@
   "tempo": 1,
   "voice_settings": { "stability": 0.4, "similarity_boost": 0.75, "style": 0.35, "use_speaker_boost": true, "speed": 1.0 },
   "lines": [
-    "I'm Zoe. Japan has places that don't look real.",
+    "Japan has places that don't look real.",
     "Five: Osaka's Dotonbori, street-food heaven.",
     "Four: Nara Park, over a thousand wild deer.",
     "Three: Shibuya Crossing, Tokyo's famous scramble.",
