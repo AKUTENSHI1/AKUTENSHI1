@@ -135,9 +135,11 @@ export const RemotionRoot: React.FC = () => {
           punch: "LOOKS UNREAL 😍",
           accent: "#facc15",
           zoom: 1.0,
-          focusX: 62,
+          focusX: 60,
           focusY: 50,
-          textTop: 980,
+          textTop: 1020,
+          hostImage: "images/zoe/japan-intro-hq.png",
+          hostName: "Zoe",
         }}
       />
       <Still

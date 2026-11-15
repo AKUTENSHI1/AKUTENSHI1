@@ -13,6 +13,8 @@ export type ThumbProps = {
   focusX?: number; // 0..100, which part of the photo to center
   focusY?: number;
   textTop?: number; // where the title block starts (px from top)
+  hostImage?: string; // optional host photo, shown as a framed card
+  hostName?: string;
 };
 
 const outline = (size: number, color: string): React.CSSProperties => ({
@@ -27,7 +29,7 @@ const outline = (size: number, color: string): React.CSSProperties => ({
   textShadow: "0 10px 40px rgba(0,0,0,0.8)",
 });
 
-export const Thumbnail: React.FC<ThumbProps> = ({ image, top, title, punch, accent, zoom = 1.3, focusX = 50, focusY = 50, textTop = 150 }) => (
+export const Thumbnail: React.FC<ThumbProps> = ({ image, top, title, punch, accent, zoom = 1.3, focusX = 50, focusY = 50, textTop = 150, hostImage, hostName }) => (
   <AbsoluteFill style={{ backgroundColor: "black" }}>
     <Img
       src={staticFile(image)}
@@ -49,6 +51,19 @@ export const Thumbnail: React.FC<ThumbProps> = ({ image, top, title, punch, acce
     />
     {/* red danger glow around the edges */}
     <AbsoluteFill style={{ boxShadow: `inset 0 0 220px ${accent}` , opacity: 0.55 }} />
+    {hostImage ? (
+      <div style={{ position: "absolute", right: 40, top: 230, width: 470, transform: "rotate(3deg)" }}>
+        <Img
+          src={staticFile(hostImage)}
+          style={{ width: 470, height: 620, objectFit: "cover", objectPosition: "50% 30%", borderRadius: 28, border: "8px solid white", boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }}
+        />
+        {hostName ? (
+          <div style={{ position: "absolute", left: 24, bottom: 20, fontFamily: MAIN_FONT, fontWeight: 900, fontSize: 64, color: "#111", background: "#facc15", borderRadius: 16, padding: "0 22px 8px" }}>
+            {hostName} 👋
+          </div>
+        ) : null}
+      </div>
+    ) : null}
     <AbsoluteFill style={{ alignItems: "center", paddingTop: textTop }}>
       <div
         style={{
