@@ -19,7 +19,7 @@ import { SANS_FONT, SERIF_FONT } from "../fonts";
 import type { Top5Data } from "../top5/data";
 import { v2Timing, type V2Extras } from "../top5/v2/Top5V2";
 
-type Ep = Top5Data & V2Extras & { country: string; issue?: string };
+type Ep = Top5Data & V2Extras & { country: string; issue?: string; likeSubscribe?: boolean };
 
 const FADE = 12; // cross-fade length in frames
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -224,6 +224,75 @@ const Closing: React.FC<{ d: Ep; nextAt: number }> = ({ d, nextAt }) => {
   );
 };
 
+// Animated "Like + Subscribe" moment, shown right after #1 is revealed:
+// the buttons pop in, a finger taps them, the thumb turns blue and
+// "Subscribe" becomes "Subscribed ✓".
+const LikeSubscribe: React.FC<{ at: number }> = ({ at }) => {
+  const frame = useCurrentFrame() - at;
+  if (frame < 0) return null;
+  const pop = (start: number) => interpolate(frame, [start, start + 10], [0, 1], { ...clamp, easing: Easing.out(Easing.back(2)) });
+  const tapLike = frame >= 14;
+  const tapSub = frame >= 30;
+  const press = (t: number) => (frame >= t && frame < t + 5 ? 0.9 : 1);
+  const finger = frame < 14 ? { x: -160, y: 60 } : frame < 30 ? { x: -150, y: 20 } : { x: 170, y: 20 };
+  const fingerIn = interpolate(frame, [6, 12], [0, 1], clamp);
+  return (
+    <div style={{ position: "absolute", top: 640, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+      <div style={{ position: "relative", display: "flex", gap: 30, alignItems: "center" }}>
+        <div
+          style={{
+            transform: `scale(${pop(0) * press(14)})`,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            background: "rgba(255,255,255,0.95)",
+            borderRadius: 999,
+            padding: "14px 34px",
+            fontFamily: SANS_FONT,
+            fontWeight: 700,
+            fontSize: 44,
+            color: tapLike ? "#065fd4" : "#0f0f0f",
+          }}
+        >
+          <span style={{ fontSize: 50, filter: tapLike ? "none" : "grayscale(1)" }}>👍</span>
+          Like
+        </div>
+        <div
+          style={{
+            transform: `scale(${pop(4) * press(30)})`,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            background: tapSub ? "rgba(255,255,255,0.9)" : "#ff0000",
+            borderRadius: 999,
+            padding: "14px 38px",
+            fontFamily: SANS_FONT,
+            fontWeight: 700,
+            fontSize: 44,
+            color: tapSub ? "#0f0f0f" : "white",
+          }}
+        >
+          {tapSub ? "Subscribed ✓" : "Subscribe"}
+          <span style={{ fontSize: 44 }}>🔔</span>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            fontSize: 80,
+            opacity: fingerIn * (frame < 50 ? 1 : interpolate(frame, [50, 58], [1, 0], clamp)),
+            transform: `translate(${finger.x}px, ${finger.y}px)`,
+            transition: "none",
+          }}
+        >
+          👆
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const EditorialEpisode: React.FC<{ data: Ep }> = ({ data: d }) => {
   const t = v2Timing(d);
   const n = d.items.length;
@@ -249,6 +318,7 @@ export const EditorialEpisode: React.FC<{ data: Ep }> = ({ data: d }) => {
       <Sequence from={finalStart}>
         <Place d={d} i={n - 1} len={finalLen} final />
         <Closing d={d} nextAt={d.voiceStartsNextAt ?? 60} />
+        {d.likeSubscribe ? <LikeSubscribe at={d.voiceStartsNextAt ?? 60} /> : null}
       </Sequence>
       <Grain />
     </AbsoluteFill>
