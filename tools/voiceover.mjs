@@ -2,19 +2,32 @@
 // exactly when each line is spoken so the video can follow the voice.
 //
 // PowerShell (in the project folder):
-//   $env:ELEVENLABS_API_KEY = "your-key"
-//   $env:ELEVENLABS_VOICE_ID = "your-voice-id"
 //   node tools/voiceover.mjs japan
+// It asks for your ElevenLabs API key and voice ID (or reads them from
+// $env:ELEVENLABS_API_KEY and $env:ELEVENLABS_VOICE_ID if you set those).
 //
 // Reads  src/series/<episode>.script.json  (one entry per line of the script)
 // Writes public/voice/<episode>.mp3  and  src/series/<episode>.timing.json
 import fs from "node:fs";
 
+import readline from "node:readline/promises";
+
 const episode = process.argv[2];
-const key = process.env.ELEVENLABS_API_KEY;
-const voice = process.env.ELEVENLABS_VOICE_ID;
-if (!episode || !key || !voice) {
-  console.error("Usage: set ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID, then: node tools/voiceover.mjs <episode>");
+if (!episode) {
+  console.error("Usage: node tools/voiceover.mjs <episode>   (for example: node tools/voiceover.mjs japan)");
+  process.exit(1);
+}
+// Use the environment variables if set; otherwise just ask.
+let key = process.env.ELEVENLABS_API_KEY;
+let voice = process.env.ELEVENLABS_VOICE_ID;
+if (!key || !voice) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  if (!key) key = (await rl.question("Paste your ElevenLabs API key, then press Enter: ")).trim();
+  if (!voice) voice = (await rl.question("Paste your ElevenLabs voice ID, then press Enter: ")).trim();
+  rl.close();
+}
+if (!key || !voice) {
+  console.error("Both the API key and the voice ID are needed.");
   process.exit(1);
 }
 
