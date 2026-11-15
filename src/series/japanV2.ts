@@ -8,12 +8,13 @@ export const japanV2: EpisodeV2 = {
   country: "Japan",
   flag: "🇯🇵",
   hookLine: "Number one is unreal.",
-  closeText: "Like if you'd go 👍",
+  closeText: "Like & follow 👍",
   nextCountry: "Italy 🇮🇹",
   voice: "voice/japan.mp3",
   music: "music/japan-bed.mp3",
   musicVolume: 0.12,
   timing,
+  host: { name: "Zoe", clip: "video/zoe/japan-intro.mp4", image: "images/zoe/japan-intro.png" },
   places: [
     {
       name: "Osaka", spot: "Dotonbori", detail: "Street-food capital", image: img("osaka.jpg"),

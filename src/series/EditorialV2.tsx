@@ -11,6 +11,7 @@ import {
   Freeze,
   Img,
   interpolate,
+  OffthreadVideo,
   random,
   Sequence,
   staticFile,
@@ -37,6 +38,7 @@ export type EpisodeV2 = {
   music?: string;
   musicVolume?: number;
   timing: { lineStarts: number[]; duration: number };
+  host?: { name: string; clip: string; image: string }; // talking intro (muted: the voice track carries the audio)
 };
 
 const f = (s: number) => Math.round(s * FPS);
@@ -138,6 +140,31 @@ const Pop: React.FC<{ at: number; children: React.ReactNode; style?: React.CSSPr
 const CutFlash: React.FC = () => {
   const frame = useCurrentFrame();
   return <AbsoluteFill style={{ background: "white", opacity: interpolate(frame, [0, 4], [0.45, 0], clamp) }} />;
+};
+
+// ---------- Host intro: Zoe talks (clip muted, main voice plays) ----------
+const HostIntro: React.FC<{ d: EpisodeV2; len: number }> = ({ d, len }) => {
+  const frame = useCurrentFrame();
+  const push = interpolate(frame, [len - 8, len], [1, 1.15], { ...clamp, easing: Easing.in(Easing.quad) });
+  const tag = interpolate(frame, [4, 12, 45, 55], [0, 1, 1, 0], clamp);
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#0b0b0b" }}>
+      <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: "65% 35%" }}>
+        <OffthreadVideo src={staticFile(d.host!.clip)} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </AbsoluteFill>
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 26%)" }} />
+      <AbsoluteFill style={{ alignItems: "center", paddingTop: 140 }}>
+        <div style={caps(40)}>5 places in</div>
+        <div style={serif(150, { fontWeight: 900, letterSpacing: 4, marginTop: 4 })}>
+          {d.country.toUpperCase()} {d.flag}
+        </div>
+      </AbsoluteFill>
+      <div style={{ position: "absolute", left: 70, top: 1180, opacity: tag }}>
+        <div style={serif(56, { fontStyle: "italic", textAlign: "left" })}>with {d.host!.name}</div>
+        <div style={{ width: 120, height: 3, background: CREAM, marginTop: 8 }} />
+      </div>
+    </AbsoluteFill>
+  );
 };
 
 // ---------- Hook: huge country name over fast cuts (no #1 spoiler: last cut blurred) ----------
@@ -245,6 +272,12 @@ const EndCard: React.FC<{ d: EpisodeV2; at: number }> = ({ d, at }) => {
   return (
     <AbsoluteFill style={{ alignItems: "center", paddingTop: 380 }}>
       <div style={{ opacity: p, transform: `scale(${0.8 + p * 0.2})`, display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
+        {d.host ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+            <Img src={staticFile(d.host.image)} style={{ width: 150, height: 150, borderRadius: 75, objectFit: "cover", objectPosition: "50% 22%", border: `4px solid ${CREAM}` }} />
+            <div style={serif(64, { fontStyle: "italic", textAlign: "left" })}>{d.host.name}</div>
+          </div>
+        ) : null}
         <div style={serif(70, { fontStyle: "italic" })}>{d.closeText}</div>
         <div style={{ border: `3px solid ${CREAM}`, background: "rgba(0,0,0,0.45)", padding: "14px 44px 20px", ...caps(48) }}>
           Next: {d.nextCountry}
@@ -266,7 +299,7 @@ export const EditorialV2: React.FC<{ data: EpisodeV2 }> = ({ data: d }) => {
       {d.music ? <Audio src={staticFile(d.music)} volume={d.musicVolume ?? 0.12} /> : null}
       <Audio src={staticFile(d.voice)} volume={1} />
       <Sequence durationInFrames={s[1]}>
-        <Hook d={d} len={s[1]} />
+        {d.host ? <HostIntro d={d} len={s[1]} /> : <Hook d={d} len={s[1]} />}
       </Sequence>
       {[0, 1, 2, 3].map((i) => (
         <Sequence key={i} from={s[1 + i]} durationInFrames={s[2 + i] - s[1 + i]}>
@@ -285,7 +318,7 @@ export const EditorialV2: React.FC<{ data: EpisodeV2 }> = ({ data: d }) => {
       <Sequence from={end}>
         <AbsoluteFill style={{ opacity: interpolate(frame, [end, total - 1], [0, 1], clamp) }}>
           <Freeze frame={0}>
-            <Hook d={d} len={s[1]} />
+            {d.host ? <HostIntro d={d} len={s[1]} /> : <Hook d={d} len={s[1]} />}
           </Freeze>
         </AbsoluteFill>
       </Sequence>
