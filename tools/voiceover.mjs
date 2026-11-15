@@ -9,6 +9,7 @@
 // Reads  src/series/<episode>.script.json  (one entry per line of the script)
 // Writes public/voice/<episode>.mp3  and  src/series/<episode>.timing.json
 import fs from "node:fs";
+import { execFileSync } from "node:child_process";
 
 import readline from "node:readline/promises";
 
@@ -31,7 +32,7 @@ if (!key || !voice) {
   process.exit(1);
 }
 
-const { lines } = JSON.parse(fs.readFileSync(`src/series/${episode}.script.json`, "utf8"));
+const { lines, voice_settings, tempo = 1 } = JSON.parse(fs.readFileSync(`src/series/${episode}.script.json`, "utf8"));
 const text = lines.join(" ");
 
 const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}/with-timestamps`, {
@@ -40,7 +41,7 @@ const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}/wi
   body: JSON.stringify({
     text,
     model_id: "eleven_multilingual_v2",
-    voice_settings: { stability: 0.4, similarity_boost: 0.8, style: 0.5 },
+    voice_settings: voice_settings ?? { stability: 0.4, similarity_boost: 0.8, style: 0.5 },
   }),
 });
 if (!res.ok) {
@@ -60,6 +61,20 @@ for (const line of lines) {
   lineStarts.push(starts[Math.min(offset, starts.length - 1)]);
   offset += line.length + 1; // +1 for the space joining the lines
 }
-const duration = ends[ends.length - 1];
+let duration = ends[ends.length - 1];
+
+// Optional speed-up that keeps the pitch natural ("tempo" in the script file, e.g. 1.4).
+// Uses the ffmpeg that comes with Remotion, so nothing extra needs installing.
+if (tempo !== 1) {
+  const src = `public/voice/${episode}.mp3`;
+  const tmp = `public/voice/${episode}.tmp.mp3`;
+  execFileSync("npx", ["remotion", "ffmpeg", "-y", "-loglevel", "error", "-i", src, "-filter:a", `atempo=${tempo}`, "-b:a", "192k", tmp], {
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  });
+  fs.renameSync(tmp, src);
+  for (let i = 0; i < lineStarts.length; i++) lineStarts[i] /= tempo;
+  duration /= tempo;
+}
 fs.writeFileSync(`src/series/${episode}.timing.json`, JSON.stringify({ lineStarts, duration }, null, 2) + "\n");
-console.log(`Saved public/voice/${episode}.mp3 (${duration.toFixed(1)} s) and src/series/${episode}.timing.json`);
+console.log(`Saved public/voice/${episode}.mp3 (${duration.toFixed(1)} s${tempo !== 1 ? `, sped up ${tempo}x` : ""}) and src/series/${episode}.timing.json`);
