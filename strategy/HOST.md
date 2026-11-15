@@ -1,6 +1,6 @@
 # Recurring host character
 
-Fictional, original woman (not based on any real person). Name: TBD.
+Fictional, original woman (not based on any real person). Name: **Zoe**.
 Mid-20s, short red hair, round tortoiseshell glasses (signature), freckles, green eyes,
 fair skin, dimples. Default outfit: white t-shirt, light denim jacket, light-blue jeans,
 white sneakers. Per episode: casual travel outfit that matches the country.
