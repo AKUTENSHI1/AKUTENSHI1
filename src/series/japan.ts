@@ -23,7 +23,6 @@ const photo = (file: string, aspect: number) => ({ image: `images/series/japan/$
 
 export const japan: EditorialData = {
   country: "Japan",
-  issue: "Issue 01",
   hookTop: "TOP 5 PLACES",
   hookTitle: "Going to Japan? 🇯🇵",
   hookTease: "Don't miss No. 01",

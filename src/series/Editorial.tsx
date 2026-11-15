@@ -19,7 +19,7 @@ import { SANS_FONT, SERIF_FONT } from "../fonts";
 import type { Top5Data } from "../top5/data";
 import { v2Timing, type V2Extras } from "../top5/v2/Top5V2";
 
-type Ep = Top5Data & V2Extras & { country: string; issue: string };
+type Ep = Top5Data & V2Extras & { country: string; issue?: string };
 
 const FADE = 12; // cross-fade length in frames
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -99,8 +99,8 @@ const Grain: React.FC = () => {
 // Thin top bar like a magazine header.
 const Masthead: React.FC<{ d: Ep; label: string }> = ({ d, label }) => (
   <div style={{ position: "absolute", top: 150, left: 70, right: 70 }}>
-    <div style={{ display: "flex", justifyContent: "space-between", ...caps(24, { letterSpacing: 6, opacity: 0.85 }) }}>
-      <span>{d.issue}</span>
+    <div style={{ display: "flex", justifyContent: d.issue ? "space-between" : "flex-end", ...caps(24, { letterSpacing: 6, opacity: 0.85 }) }}>
+      {d.issue ? <span>{d.issue}</span> : null}
       <span>{label}</span>
     </div>
     <div style={{ height: 2, background: "rgba(253,250,243,0.7)", marginTop: 16 }} />
