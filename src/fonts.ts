@@ -13,3 +13,13 @@ for (const weight of ["400", "700", "900"]) {
     weight,
   });
 }
+
+// Editorial style: Playfair Display (serif headlines) + Inter (small captions).
+export const SERIF_FONT = "Playfair Display";
+export const SANS_FONT = "Inter";
+for (const [weight, style] of [["400", "normal"], ["400", "italic"], ["700", "normal"], ["900", "normal"]]) {
+  loadFont({ family: SERIF_FONT, url: staticFile(`fonts/playfair-display-latin-${weight}-${style}.woff2`), weight, style });
+}
+for (const weight of ["400", "700"]) {
+  loadFont({ family: SANS_FONT, url: staticFile(`fonts/inter-latin-${weight}-normal.woff2`), weight });
+}
