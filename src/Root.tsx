@@ -124,6 +124,23 @@ export const RemotionRoot: React.FC = () => {
       />
       {/* Thumbnails (1080x1920 stills) */}
       <Still
+        id="Thumb-Japan"
+        component={Thumbnail}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          image: "images/series/japan/fuji.jpg",
+          top: "TOP 5 🇯🇵",
+          title: "JAPAN",
+          punch: "LOOKS UNREAL 😍",
+          accent: "#facc15",
+          zoom: 1.0,
+          focusX: 62,
+          focusY: 50,
+          textTop: 980,
+        }}
+      />
+      <Still
         id="Thumb-HotPlanets"
         component={Thumbnail}
         width={1080}
