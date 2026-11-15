@@ -38,7 +38,7 @@ export const japan: EditorialData = {
   outro: "",
   voice: "voice/japan.mp3",
   music: "music/intro-track.mp3",
-  musicVolume: 0.15,
+  musicVolume: 0.06,
   pan: 0.6,
   timing: timingFromVoice(timing),
   items: [
