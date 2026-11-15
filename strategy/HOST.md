@@ -9,7 +9,8 @@ white sneakers. Per episode: casual travel outfit that matches the country.
 | What | Higgsfield job id | Link |
 |---|---|---|
 | Original example (chosen: version 2) | 3fc4ade3-faa6-4a22-88c1-c662e8d34a5b | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_154157_3fc4ade3-faa6-4a22-88c1-c662e8d34a5b.png |
-| Face + full front + full back sheet | 853311e4-e90e-42cd-9743-944ea90367b4 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_154855_853311e4-e90e-42cd-9743-944ea90367b4.png |
+| Face + full front + full back sheet (first) | 853311e4-e90e-42cd-9743-944ea90367b4 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_154855_853311e4-e90e-42cd-9743-944ea90367b4.png |
+| Glamorous / curvier version (latest, pending approval) | ab0fd606-1427-4a65-8b11-b85e8451f8b9 | https://d8j0ntlcm91z4.cloudfront.net/user_3Lw98A1eMaspOyNpWO7AvYLyJaN/hf_20261115_155259_ab0fd606-1427-4a65-8b11-b85e8451f8b9.png |
 
 ## Costs (Higgsfield credits)
 - Character sheet / per-episode host picture: 0.25 (GPT Image 2.6, standard quality)
