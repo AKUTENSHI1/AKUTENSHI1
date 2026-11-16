@@ -20,6 +20,7 @@ import { japan } from "./series/japan";
 import { EditorialEpisode } from "./series/Editorial";
 import { EditorialV2, v2EpisodeDuration } from "./series/EditorialV2";
 import { japanV2 } from "./series/japanV2";
+import { italyV2 } from "./series/italyV2";
 
 export const SHORT_WIDTH = 1080;
 export const SHORT_HEIGHT = 1920;
@@ -105,6 +106,15 @@ export const RemotionRoot: React.FC = () => {
         durationInFrames={v2EpisodeDuration(japanV2)}
       />
       <Composition
+        id="Series-Italy"
+        component={EditorialV2}
+        defaultProps={{ data: italyV2 }}
+        width={SHORT_WIDTH}
+        height={SHORT_HEIGHT}
+        fps={SHORT_FPS}
+        durationInFrames={v2EpisodeDuration(italyV2)}
+      />
+      <Composition
         id="Series-Japan-v1"
         component={EditorialEpisode}
         defaultProps={{ data: japan }}
@@ -140,6 +150,23 @@ export const RemotionRoot: React.FC = () => {
           textTop: 1020,
           hostImage: "images/zoe/japan-intro-hq.png",
           hostName: "Zoe",
+        }}
+      />
+      <Still
+        id="Thumb-Italy"
+        component={Thumbnail}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          image: "images/series/italy/cinqueterre.jpg",
+          top: "TOP 5 🇮🇹",
+          title: "ITALY",
+          punch: "LIKE A PAINTING 🎨",
+          accent: "#facc15",
+          zoom: 1.0,
+          focusX: 45,
+          focusY: 50,
+          textTop: 1020,
         }}
       />
       <Still
