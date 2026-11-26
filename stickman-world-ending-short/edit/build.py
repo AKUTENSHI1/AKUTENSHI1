@@ -7,9 +7,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A = f"{ROOT}/assets"; OUT = f"{ROOT}/out"; os.makedirs(OUT, exist_ok=True)
 vo = f"{A}/voiceover.mp3"
 total = float(sys.argv[1]) if len(sys.argv) > 1 else 50.24
-# scene share of runtime (hook, #5, #4, #3, #2, #1, close)
-shares = [4.5, 8, 9, 7, 7.5, 6.5, 7.7]
-scale = total / sum(shares); durs = [s * scale for s in shares]
+# scene boundaries (s) taken from pauses detected in the real voiceover (ffmpeg silencedetect)
+bounds = [0, 4.4, 13.5, 22.6, 29.4, 37.1, 43.3, total]
+durs = [bounds[i+1]-bounds[i] for i in range(7)]
 W, H, FPS = 1080, 1920, 30
 clips = []
 for i, d in enumerate(durs):
@@ -22,18 +22,21 @@ for i, d in enumerate(durs):
     clips.append(f)
 open(f"{OUT}/list.txt","w").write("".join(f"file '{c}'\n" for c in clips))
 # cues: (text, highlight word or None)
-cues = ["Five WAYS the world could end,","and how you'd SURVIVE each one.","Number FIVE. Asteroid.","NASA already proved","it can nudge one off course,","so your job is simple:","follow EVACUATION orders.",
-"Number FOUR. Supervolcano.","ASH blocks sunlight","and crops fail.","Store TWO WEEKS of food and water,","and keep masks for the ash.",
-"Number THREE. Pandemic.","Wash your hands,","stay home when sick,","and stay current on vaccines.",
-"Number TWO. Solar superstorm.","It can take down POWER GRIDS.","Keep batteries, cash,","and a paper map.",
-"Number ONE. Nuclear war.","Get INSIDE. Stay INSIDE. Stay TUNED.","Whatever it is, the plan is the same:","water, food, a radio, and a plan.","SAVE THIS."]
-wts = [len(c)+6 for c in cues]; t = 0.0; ev = []
+cues = [
+("Five WAYS the world could end,",0.0,1.82),("and how you'd SURVIVE each one.",2.07,3.72),
+("Number FIVE. Asteroid.",4.46,6.32),("NASA already proved",6.84,8.0),("it can nudge one off course,",8.0,9.6),
+("so your job is simple:",9.84,11.03),("follow EVACUATION orders.",11.47,13.13),
+("Number FOUR. Supervolcano.",13.75,15.74),("ASH blocks sunlight",16.26,17.45),("and crops fail.",17.45,18.48),
+("Store TWO WEEKS of food and water,",18.88,20.47),("and keep masks for the ash.",20.70,22.27),
+("Number THREE. Pandemic.",22.86,24.6),("Wash your hands,",25.06,26.1),("stay home when sick,",26.1,27.1),("and stay current on vaccines.",27.35,29.05),
+("Number TWO. Solar superstorm.",29.66,31.97),("It can take down POWER GRIDS.",32.45,34.04),("Keep batteries, cash,",34.36,35.76),("and a paper map.",35.95,36.75),
+("Number ONE. Nuclear war.",37.36,39.31),("Get INSIDE. Stay INSIDE. Stay TUNED.",39.78,42.95),
+("Whatever it is, the plan is the same:",43.54,45.73),("water, food, a radio, and a plan.",46.12,48.95),("SAVE THIS.",49.39,total)]
+ev = []
 def ts(x): h=int(x//3600); m=int(x%3600//60); s=x%60; return f"{h}:{m:02d}:{s:05.2f}"
-for c, w in zip(cues, wts):
-    d = total * w / sum(wts)
+for c, t0, t1 in cues:
     txt = " ".join(("{\\c&H00FFFF&}%s{\\c&HFFFFFF&}" % x if x.isupper() and len(x.strip('.,'))>2 else x) for x in c.split())
-    ev.append(f"Dialogue: 0,{ts(t)},{ts(t+d)},Cap,,0,0,0,,{{\\fad(60,0)}}{txt}")
-    t += d
+    ev.append(f"Dialogue: 0,{ts(t0)},{ts(t1)},Cap,,0,0,0,,{{\\fad(60,0)}}{txt}")
 hdr = f"""[Script Info]
 PlayResX: {W}
 PlayResY: {H}
@@ -43,7 +46,7 @@ Style: Cap,DejaVu Sans,78,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,-1,0,0,0,1
 Style: Head,DejaVu Sans,96,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,9,2,8,70,70,260,1
 [Events]
 Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
-Dialogue: 1,0:00:00.00,0:00:03.20,Head,,0,0,0,,{{\\fad(0,200)}}5 WAYS THE\\NWORLD ENDS
+Dialogue: 1,0:00:00.00,0:00:03.60,Head,,0,0,0,,{{\\fad(0,200)}}5 WAYS THE\\NWORLD ENDS
 """
 open(f"{OUT}/captions.ass","w").write(hdr + "\n".join(ev) + "\n")
 cmd = ["ffmpeg","-y","-loglevel","error","-f","concat","-safe","0","-i",f"{OUT}/list.txt"]
