@@ -1,0 +1,35 @@
+[Script Info]
+PlayResX: 1080
+PlayResY: 1920
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Cap,DejaVu Sans,78,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,7,2,2,90,90,560,1
+Style: Head,DejaVu Sans,96,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,9,2,8,70,70,260,1
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 1,0:00:00.00,0:00:03.20,Head,,0,0,0,,{\fad(0,200)}5 WAYS THE\NWORLD ENDS
+Dialogue: 0,0:00:00.00,0:00:02.35,Cap,,0,0,0,,{\fad(60,0)}Five {\c&H00FFFF&}WAYS{\c&HFFFFFF&} the world could end,
+Dialogue: 0,0:00:02.35,0:00:04.76,Cap,,0,0,0,,{\fad(60,0)}and how you'd {\c&H00FFFF&}SURVIVE{\c&HFFFFFF&} each one.
+Dialogue: 0,0:00:04.76,0:00:06.58,Cap,,0,0,0,,{\fad(60,0)}Number {\c&H00FFFF&}FIVE.{\c&HFFFFFF&} Asteroid.
+Dialogue: 0,0:00:06.58,0:00:08.21,Cap,,0,0,0,,{\fad(60,0)}{\c&H00FFFF&}NASA{\c&HFFFFFF&} already proved
+Dialogue: 0,0:00:08.21,0:00:10.43,Cap,,0,0,0,,{\fad(60,0)}it can nudge one off course,
+Dialogue: 0,0:00:10.43,0:00:12.25,Cap,,0,0,0,,{\fad(60,0)}so your job is simple:
+Dialogue: 0,0:00:12.25,0:00:14.27,Cap,,0,0,0,,{\fad(60,0)}follow {\c&H00FFFF&}EVACUATION{\c&HFFFFFF&} orders.
+Dialogue: 0,0:00:14.27,0:00:16.36,Cap,,0,0,0,,{\fad(60,0)}Number {\c&H00FFFF&}FOUR.{\c&HFFFFFF&} Supervolcano.
+Dialogue: 0,0:00:16.36,0:00:17.98,Cap,,0,0,0,,{\fad(60,0)}{\c&H00FFFF&}ASH{\c&HFFFFFF&} blocks sunlight
+Dialogue: 0,0:00:17.98,0:00:19.35,Cap,,0,0,0,,{\fad(60,0)}and crops fail.
+Dialogue: 0,0:00:19.35,0:00:21.96,Cap,,0,0,0,,{\fad(60,0)}Store {\c&H00FFFF&}TWO{\c&HFFFFFF&} {\c&H00FFFF&}WEEKS{\c&HFFFFFF&} of food and water,
+Dialogue: 0,0:00:21.96,0:00:24.11,Cap,,0,0,0,,{\fad(60,0)}and keep masks for the ash.
+Dialogue: 0,0:00:24.11,0:00:26.00,Cap,,0,0,0,,{\fad(60,0)}Number {\c&H00FFFF&}THREE.{\c&HFFFFFF&} Pandemic.
+Dialogue: 0,0:00:26.00,0:00:27.43,Cap,,0,0,0,,{\fad(60,0)}Wash your hands,
+Dialogue: 0,0:00:27.43,0:00:29.13,Cap,,0,0,0,,{\fad(60,0)}stay home when sick,
+Dialogue: 0,0:00:29.13,0:00:31.41,Cap,,0,0,0,,{\fad(60,0)}and stay current on vaccines.
+Dialogue: 0,0:00:31.41,0:00:33.69,Cap,,0,0,0,,{\fad(60,0)}Number {\c&H00FFFF&}TWO.{\c&HFFFFFF&} Solar superstorm.
+Dialogue: 0,0:00:33.69,0:00:35.97,Cap,,0,0,0,,{\fad(60,0)}It can take down {\c&H00FFFF&}POWER{\c&HFFFFFF&} {\c&H00FFFF&}GRIDS.{\c&HFFFFFF&}
+Dialogue: 0,0:00:35.97,0:00:37.73,Cap,,0,0,0,,{\fad(60,0)}Keep batteries, cash,
+Dialogue: 0,0:00:37.73,0:00:39.16,Cap,,0,0,0,,{\fad(60,0)}and a paper map.
+Dialogue: 0,0:00:39.16,0:00:41.12,Cap,,0,0,0,,{\fad(60,0)}Number {\c&H00FFFF&}ONE.{\c&HFFFFFF&} Nuclear war.
+Dialogue: 0,0:00:41.12,0:00:43.85,Cap,,0,0,0,,{\fad(60,0)}Get {\c&H00FFFF&}INSIDE.{\c&HFFFFFF&} Stay {\c&H00FFFF&}INSIDE.{\c&HFFFFFF&} Stay {\c&H00FFFF&}TUNED.{\c&HFFFFFF&}
+Dialogue: 0,0:00:43.85,0:00:46.66,Cap,,0,0,0,,{\fad(60,0)}Whatever it is, the plan is the same:
+Dialogue: 0,0:00:46.66,0:00:49.20,Cap,,0,0,0,,{\fad(60,0)}water, food, a radio, and a plan.
+Dialogue: 0,0:00:49.20,0:00:50.24,Cap,,0,0,0,,{\fad(60,0)}{\c&H00FFFF&}SAVE{\c&HFFFFFF&} {\c&H00FFFF&}THIS.{\c&HFFFFFF&}
